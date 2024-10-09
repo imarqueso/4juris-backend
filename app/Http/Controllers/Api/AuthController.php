@@ -9,25 +9,32 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum')->except(['login']);
+    }
+
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|string|email',
+            'email' => 'required|email',
             'password' => 'required|string',
         ]);
 
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            $user = Usuario::where('email', $request->email)->first();
+        $credentials = $request->only('email', 'password');
 
-            $token = $user->createToken('usuario_token')->plainTextToken;
+        // Verifique se as credenciais são válidas
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
 
-            return response()->json([
-                'user' => $user,
-                'token' => $token,
-            ]);
+            // Geração do token
+            $token = $user->createToken('AppToken')->plainTextToken;
+
+            return response()->json(['token' => $token], 200);
         }
 
-        return response()->json(['error' => 'Unauthorized'], 401);
+        return response()->json(['message' => 'These credentials do not match our records.'], 401);
     }
 
     public function logout(Request $request)

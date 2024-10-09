@@ -10,18 +10,25 @@ class Empresa extends Model
 {
     use HasFactory;
 
-    public function usuarios()
-    {
-        return $this->hasMany(Usuario::class);
-    }
+    protected $table = 'empresas';
+
+    protected $fillable = ['empresa_nome'];
+
+    // Se você não precisa de um escopo global, remova o método booted
+    // Caso contrário, ajuste o escopo da seguinte forma:
 
     protected static function booted()
     {
+        // Remova ou ajuste o escopo, dependendo da sua necessidade
         static::addGlobalScope('empresa', function (Builder $builder) {
             if (auth()->check()) {
-                $empresaId = auth()->user()->empresa_id;
-                $builder->where('empresa_id', $empresaId);
+                $builder->where('id', auth()->user()->empresa_id); // Use 'id' para filtrar
             }
         });
+    }
+
+    public function usuarios()
+    {
+        return $this->hasMany(Usuario::class);
     }
 }

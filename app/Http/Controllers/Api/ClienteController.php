@@ -4,13 +4,34 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cliente;
+use App\Models\Usuario;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ClienteController extends Controller
 {
     public function index()
     {
-        return Cliente::with('usuario')->get();
+        try {
+            // Carrega os clientes com o relacionamento 'usuario'
+            $clientes = Cliente::with('usuario.empresa')->get();
+
+            // Mapeia os resultados para o formato desejado
+            $resultados = $clientes->map(function ($cliente) {
+                return [
+                    'id' => $cliente->id,
+                    'cliente_nome' => $cliente->cliente_nome,
+                    'usuario_nome' => $cliente->usuario ? $cliente->usuario->usuario_nome : null,
+                    'empresa_nome' => $cliente->usuario->empresa->empresa_nome, // Usando o accessor diretamente
+                ];
+            });
+
+            // Retorna a resposta em JSON
+            return response()->json($resultados, 200);
+        } catch (\Exception $e) {
+            Log::error('Erro ao buscar clientes: ' . $e->getMessage());
+            return response()->json(['error' => 'Erro ao buscar clientes.'], 500);
+        }
     }
 
     public function store(Request $request)
