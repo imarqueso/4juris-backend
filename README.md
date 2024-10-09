@@ -4,7 +4,7 @@ Bem-vindo ao repositório do Teste da 4Juris, um sistema desenvolvido em Laravel
 
 ## Instalação
 
-Siga os passos abaixo para configurar e executar localmente o GestãoStock em seu ambiente:
+Siga os passos abaixo para configurar e executar localmente.
 
 1. **Clone o repositório:**
 
