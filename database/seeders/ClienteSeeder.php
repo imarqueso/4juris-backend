@@ -21,5 +21,13 @@ class ClienteSeeder extends Seeder
             'cliente_nome' => 'Cliente Teste 2',
             'usuario_id' => 1,
         ]);
+        Cliente::create([
+            'cliente_nome' => 'Cliente Teste 3',
+            'usuario_id' => 1,
+        ]);
+        Cliente::create([
+            'cliente_nome' => 'Cliente Teste 4',
+            'usuario_id' => 1,
+        ]);
     }
 }
