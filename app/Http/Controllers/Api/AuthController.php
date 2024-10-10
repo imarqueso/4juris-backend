@@ -24,11 +24,9 @@ class AuthController extends Controller
 
         $credentials = $request->only('email', 'password');
 
-        // Verifique se as credenciais são válidas
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
 
-            // Geração do token
             $token = $user->createToken('AppToken')->plainTextToken;
 
             return response()->json(['token' => $token], 200);

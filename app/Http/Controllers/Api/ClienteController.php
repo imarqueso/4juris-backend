@@ -13,20 +13,17 @@ class ClienteController extends Controller
     public function index()
     {
         try {
-            // Carrega os clientes com o relacionamento 'usuario'
             $clientes = Cliente::with('usuario.empresa')->get();
 
-            // Mapeia os resultados para o formato desejado
             $resultados = $clientes->map(function ($cliente) {
                 return [
                     'id' => $cliente->id,
                     'cliente_nome' => $cliente->cliente_nome,
                     'usuario_nome' => $cliente->usuario ? $cliente->usuario->usuario_nome : null,
-                    'empresa_nome' => $cliente->usuario->empresa->empresa_nome, // Usando o accessor diretamente
+                    'empresa_nome' => $cliente->usuario->empresa->empresa_nome,
                 ];
             });
 
-            // Retorna a resposta em JSON
             return response()->json($resultados, 200);
         } catch (\Exception $e) {
             Log::error('Erro ao buscar clientes: ' . $e->getMessage());

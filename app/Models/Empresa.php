@@ -14,15 +14,11 @@ class Empresa extends Model
 
     protected $fillable = ['empresa_nome'];
 
-    // Se você não precisa de um escopo global, remova o método booted
-    // Caso contrário, ajuste o escopo da seguinte forma:
-
     protected static function booted()
     {
-        // Remova ou ajuste o escopo, dependendo da sua necessidade
         static::addGlobalScope('empresa', function (Builder $builder) {
             if (auth()->check()) {
-                $builder->where('id', auth()->user()->empresa_id); // Use 'id' para filtrar
+                $builder->where('id', auth()->user()->empresa_id);
             }
         });
     }
