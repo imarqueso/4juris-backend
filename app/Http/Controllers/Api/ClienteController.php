@@ -24,7 +24,7 @@ class ClienteController extends Controller
                 ];
             });
 
-            return response()->json($resultados, 200);
+            return response()->json($resultados);
         } catch (\Exception $e) {
             Log::error('Erro ao buscar clientes: ' . $e->getMessage());
             return response()->json(['error' => 'Erro ao buscar clientes.'], 500);
@@ -33,35 +33,64 @@ class ClienteController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'cliente_nome' => 'required|string|max:255',
-            'usuario_id' => 'required|exists:usuarios,id',
-        ]);
+        try {
 
-        return Cliente::create($request->all());
+            $request->validate([
+                'cliente_nome' => 'required|string|max:255',
+                'usuario_id' => 'required|exists:usuarios,id',
+            ]);
+
+            Cliente::create($request->all());
+
+            return response()->json(['message' => 'Cliente cadastrado com sucesso!']);
+        } catch (\Exception $e) {
+            Log::error('Erro ao cadastrar cliente: ' . $e->getMessage());
+            return response()->json(['error' => 'Erro ao cadastrar cliente.'], 500);
+        }
     }
 
     public function show(Cliente $cliente)
     {
-        $cliente->load('usuario');
+        try {
 
-        return response()->json($cliente);
+            $cliente->load('usuario');
+            return response()->json([
+                'id' => $cliente->id,
+                'cliente_nome' => $cliente->cliente_nome,
+                'usuario_id' => $cliente->usuario_id
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Erro ao retornar cliente: ' . $e->getMessage());
+            return response()->json(['error' => 'Erro ao retornar cliente:'], 500);
+        }
     }
 
     public function update(Request $request, Cliente $cliente)
     {
-        $request->validate([
-            'cliente_nome' => 'sometimes|required|string|max:255',
-            'usuario_id' => 'sometimes|required|exists:usuarios,id',
-        ]);
+        try {
+            $request->validate([
+                'cliente_nome' => 'sometimes|required|string|max:255',
+                'usuario_id' => 'sometimes|required|exists:usuarios,id',
+            ]);
 
-        $cliente->update($request->all());
-        return $cliente;
+            $cliente->update($request->all());
+
+            return response()->json(['message' => 'Cliente atualizado com sucesso!']);
+        } catch (\Exception $e) {
+            Log::error('Erro ao atualizar cliente: ' . $e->getMessage());
+            return response()->json(['error' => 'Erro ao atualizar cliente:'], 500);
+        }
     }
 
     public function destroy(Cliente $cliente)
     {
-        $cliente->delete();
-        return response(null, 204);
+        try {
+            $cliente->delete();
+
+            return response()->json(['message' => 'Cliente removido com sucesso!']);
+        } catch (\Exception $e) {
+            Log::error('Erro ao remover cliente: ' . $e->getMessage());
+            return response()->json(['error' => 'Erro ao remover cliente:'], 500);
+        }
     }
 }
