@@ -21,7 +21,9 @@ class EmpresaController extends Controller
 
     public function show(Empresa $empresa)
     {
-        return $empresa;
+        $empresa->load('usuarios');
+
+        return response()->json($empresa);
     }
 
     public function update(Request $request, Empresa $empresa)

@@ -10,7 +10,9 @@ class UsuarioController extends Controller
 {
     public function index()
     {
-        return Usuario::with('empresa')->get();
+        $usuarios = Usuario::all();
+
+        return response()->json($usuarios);
     }
 
     public function store(Request $request)
@@ -25,7 +27,9 @@ class UsuarioController extends Controller
 
     public function show(Usuario $usuario)
     {
-        return $usuario->load('empresa');
+        $usuario->load('empresa');
+
+        return response()->json($usuario);
     }
 
     public function update(Request $request, Usuario $usuario)

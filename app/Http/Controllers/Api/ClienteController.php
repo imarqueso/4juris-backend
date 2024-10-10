@@ -43,7 +43,9 @@ class ClienteController extends Controller
 
     public function show(Cliente $cliente)
     {
-        return $cliente->load('usuario');
+        $cliente->load('usuario');
+
+        return response()->json($cliente);
     }
 
     public function update(Request $request, Cliente $cliente)
