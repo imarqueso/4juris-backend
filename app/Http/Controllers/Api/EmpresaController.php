@@ -10,7 +10,9 @@ class EmpresaController extends Controller
 {
     public function index()
     {
-        return Empresa::all();
+        $empresas = Empresa::all();
+
+        return response()->json($empresas);
     }
 
     public function store(Request $request)
