@@ -1,6 +1,4 @@
-# Teste 4Juris Back End
-
-Bem-vindo ao repositório do Teste da 4Juris, um sistema desenvolvido em Laravel.
+# 4Juris Back End
 
 ## Instalação
 
